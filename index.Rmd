@@ -1,0 +1,46 @@
+---
+title: "Introduction to R"
+author: "Manny Gimond"
+date: "Summer 2019"
+output: 
+  html_document:
+    toc: false
+    css: Tutorial.css
+    highlight: haddock
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, comment=NA)
+options(width = 80)
+```
+
+<hr>
+
+Before attending the workshop, make sure to install both R and RStudio per instructions found at the bottom of [the main workshop page](https://jtande.github.io/2019-06-25-ColbyCollege/).
+
+
+## [Day 1](day01.html)
+
+On the first day of the R workshop, you will be introduced to the following topics:
+
+ * Variables (aka objects)
+ * R core data types: these will include **integers**, **double**, **character** and **logical**
+ * R data structures: these will be limited to **vectors** and **data frames**
+ * Good R coding practices
+ * Reading a CSV file into R
+
+
+ 
+## [Day 2](day02.html)
+
+On the second day of the R workshop, you will be introduced to the following topics:
+
+ * Extending R's functionality with packages
+ * Reading Excel files into an R session
+ * Manipulating data tables
+ * visualizing data
+ 
+
+

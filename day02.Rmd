@@ -1,0 +1,90 @@
+---
+title: "Introduction to R - Day 2"
+author: "Manny Gimond"
+date: "Summer 2019"
+output: 
+  html_document:
+    toc: true
+    css: Tutorial.css
+    highlight: haddock
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, comment=NA)
+options(width = 80)
+```
+
+<hr>
+
+## Extending R's functionality with packages
+
+While R has a rich suite of functions to work off of, the R community extends on R’s built-in functions by offering customized functions via packages. There are more than 10,000 packages with additional packages being added weekly or daily. Most packages can be downloaded via CRAN (the Comprehensive R Archive Network).
+Packages are installed in your local user profile. You can install packages by command line via `install.packages`. In today's workshop, we'll make use of five packages: `readx`, `dplyr`, `stringr`, `tidyr` and `ggplot2`.
+
+```{r eval=FALSE}
+install.packages(c("readxl", "dplyr", "stringr", "tidyr", "ggplot2" ))
+```
+
+## Reading Excel files
+
+Installing packages onto your computer does not mean that their functions are instantly available for use in an R session. You need to explicitly tell R which packages are to be used to perform a specified set of tasks.
+
+Your computer may have hundreds of packages installed, but this does not mean that you should load all of their content in a single R session. Doing so can use up precious computer memory. Only load the packages needed for a particular workflow.
+
+In this next exercise, we will load the `readxl` package into our current R session using the `library()` function.
+
+```{r}
+library(readxl)
+```
+
+The `readxl` packages contains functions that will allow us to load an Excel file. In this next code chunk, we'll read the same spring course list loaded yesterday but this time we'll load it as an excel file.
+
+```{r}
+dat <- read_excel("SP1819.xlsx", sheet = "sheet1")
+```
+
+```{r}
+str(dat)
+```
+
+## Manipulating data tables
+
+### Subsetting data table by row
+
+```{r}
+library(dplyr)
+dat1 <- dat %>% 
+  filter(Days == "M")
+```
+
+
+```{r}
+library(dplyr)
+dat1 <- dat %>% 
+  filter(Days == "M" & Reg > 16)
+```
+
+```{r}
+library(dplyr)
+dat1 <- dat %>% 
+  filter(Days == "M" & Reg > 16)
+```
+
+## Subsetting data table by column
+
+## Splitting a column into multiple columns
+
+## Joining tables
+
+## Visualizing data
+
+### Bar plot
+
+### Line plot
+
+# Additional in-house resources
+
+
+

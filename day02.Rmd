@@ -18,20 +18,20 @@ options(width = 80)
 
 <hr>
 
-## Extending R's functionality with packages
+> Before working through this exercise, download the [SP1819.xlsx](SP1819.xlsx) and [Divisions](Divisions.csv) files into your project folder. 
 
+## Extending R's functionality with packages
+ 
 While R has a rich suite of functions to work off of, the R community extends on R’s built-in functions by offering customized functions via packages. There are more than 10,000 packages with additional packages being added weekly or daily. Most packages can be downloaded via CRAN (the Comprehensive R Archive Network).
-Packages are installed in your local user profile. You can install packages by command line via `install.packages`. In today's workshop, we'll make use of five packages: `readx`, `dplyr`, `stringr`, `tidyr` and `ggplot2`.
+Packages are installed in your local user profile. You can install packages by command line via `install.packages`. In today's workshop, we'll make use of five packages: `readxl`, `dplyr`, `stringr`, `writexl` and `ggplot2`.
 
 ```{r eval=FALSE}
-install.packages(c("readxl", "dplyr", "stringr", "tidyr", "ggplot2" ))
+install.packages(c("readxl", "dplyr", "stringr", "writexl", "ggplot2" ))
 ```
 
 ## Reading Excel files
 
 Installing packages onto your computer does not mean that their functions are instantly available for use in an R session. You need to explicitly tell R which packages are to be used to perform a specified set of tasks.
-
-Your computer may have hundreds of packages installed, but this does not mean that you should load all of their content in a single R session. Doing so can use up precious computer memory. Only load the packages needed for a particular workflow.
 
 In this next exercise, we will load the `readxl` package into our current R session using the `library()` function.
 
@@ -51,40 +51,271 @@ str(dat)
 
 ## Manipulating data tables
 
+While base R is certainly capable of satisfying most data table manipulation needs, the `dplyr` and `stringr` packages (part of a set of packages called the `tidyverse`)  provide a consistent and user friendly platform for working with data tables.
+
 ### Subsetting data table by row
+
+First, we'll load the `dplyr` package.
 
 ```{r}
 library(dplyr)
+```
+
+Next, we'll subset the spring courses schedule by keeping just those rows whose `Days` column equals `M`. Note that R is case sensitive so be sure to specify uppercase `M` and *not* lower case `m`.
+
+```{r}
 dat1 <- dat %>% 
   filter(Days == "M")
 ```
 
+It's best to picture the data manipulation workflow as an assembly line where the data table is being *piped* from one station to another where each station is performing an operation on the data table. Here, the *piping* operator is assigned the `%>%` glyph--its shortcut key is `ctrl+shift+M` (or `command+shift+M` on a Mac). The `filter()` function is a *station* along the assembly line that subsets the table by row based on the condition that the value in the `Days` column equals `M`. The output of this operation is then passed to a new data table object called `dat1`.
+
+We can apply multiple conditions to the `filter` function by piecing the conditions with boolean operators. For example, to filter the table by rows where `Days` equals `M` and where `Reg` is greater than `16`, type:
+
 
 ```{r}
-library(dplyr)
 dat1 <- dat %>% 
   filter(Days == "M" & Reg > 16)
 ```
 
+Here, since both conditions *must* be met, we tie these conditions together with the boolean **AND**, `&`. You can also write the above as:
+
 ```{r}
-library(dplyr)
 dat1 <- dat %>% 
-  filter(Days == "M" & Reg > 16)
+  filter(Days == "M",  Reg > 16)
 ```
 
-## Subsetting data table by column
+Here, the comma `,` implies that each condition *must* be met.
 
-## Splitting a column into multiple columns
+Another boolean operator you might find yourself using is the **OR** , `|`, operator. For example, if you want to filter by rows where `Days` equals `M` OR `MW`, type:
 
-## Joining tables
+```{r}
+dat1 <- dat %>% 
+  filter(Days == "M" | Days == "MW")
+```
+
+When combined with the `Reg` condition, we get:
+
+```{r}
+dat1 <- dat %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16)
+```
+
+### Subsetting data table by column
+
+Using the same piping operation framework, we can subset our table by column names. For example, to limit the table to the columns `Course`, `Days`, `Times` and `Reg`, type:
+
+```{r}
+dat1 <- dat %>% 
+  select(Course, Days, Times, Reg)
+```
+
+We can, of course, combine data table operations. For example, to combine the row selection operation with this column selection operation, type:
+
+```{r}
+dat1 <- dat %>% 
+  select(Course, Days, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16)
+```
+
+Be careful with the order in which the operations are written out. For example, had we chosen not to keep the `Days` column in the final output, the following would have generated an error message.
+
+```{r error=TRUE}
+dat1 <- dat %>% 
+  select(Course, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16)
+```
+
+Going back to our assembly line metaphor, the `filter` station only sees what's being passed to it (here, a subset of the original table with the omitted `Days` column). So in this example, the order in which the operations takes place matters. The `filter` operation should be placed before the columns selection operation as in:
+
+```{r error=TRUE}
+dat1 <- dat %>% 
+    filter(Days == "M" | Days == "MW",
+           Reg > 16) %>% 
+    select(Course, Times, Reg)
+```
+
+### Summarizing table columns
+
+The simplest summary is the count. For example, we can extract the total number of rows in the output table using the `count()` function:
+
+```{r}
+dat %>% 
+  select(Course, Days, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16) %>% 
+  count()
+```
+
+We can also summarize columns using descriptive statistics such as the mean, minimum and maximum. Here, we'll make use of the `summarise()` function. For example:
+
+```{r}
+dat %>% 
+  select(Course, Days, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16) %>% 
+  summarise(mean_reg = mean(Reg), max_reg = max(Reg))
+```
+
+Here, the `summarise` function generates two columns named `mean_reg` and `max_reg`. These are names we've chosen. The functions that perform the actual statistical summaries are `mean()` and `max()`.
+
+Sometimes, the data table may contain missing values (denoted as `NA`). This can be problematic when computing a statistical summary.
+
+```{r}
+mean(c(34.2, 4, NA, 100))
+```
+
+If an `NA` is present in a vector, the `mean()` function will return `NA`. To have the `mean()` function ignore the `NA`s, simply add the argument `na.rm = TRUE` to the function.
+
+```{r}
+mean(c(34.2, 4, NA, 100), na.rm = TRUE)
+```
+
+This fix applies to other statistical functions such as `min()`, `max()` and `median()`
+
+### Getting row counts by grouped values
+
+We can instruct R to break down summaries by unique column values. For example, to break down the summary statistics by unique `Days` values (there are only two: `M` and `MW`), add the `group_by()` function before calling the `summarise()` function.
+
+```{r}
+dat %>% 
+  select(Course, Days, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16) %>% 
+  group_by(Days) %>% 
+  summarise(mean_reg = mean(Reg), max_reg = max(Reg))
+```
+
+### Splitting a column into multiple columns
+
+In this next exercise, we will split the course number into its program/department two letter designation and its numeric component. These values will be assigned to two new columns that we'll name `Dept` and `Number`. Here, we'll make use of the `stringr` package which has a rich set of character manipulating functions.
+
+```{r}
+library(stringr)
+dat1 <- dat %>% 
+  select(Course, Days, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16) %>% 
+  mutate(Dept = str_sub(Course, start = 1, end = 2),
+         Number = str_sub(Course, start = 3, end = 5),
+         Number = as.integer(Number))
+```
+
+We make use of the `mutate()` function to create the two new columns. We also make use of the `str_sub()` function to extract characters based on their position in the string. The position values are inclusive.
+
+Note that the output of `str_sub` is always a character data type. This does not make sense for the `Number` variable. We therefore coerce it into an integer by replacing it with its numeric representation.
+
+### Joining tables
+
+Next, we will load another table: `Divisions.csv`.
+
+```{r}
+div <- read.csv("Divisions.csv", stringsAsFactors = FALSE)
+div
+```
+
+The `div` table consists of the departments' two letter designation and their affiliated division. We want to add the division names to each course in the `dat1` table. To do this, we'll join  the contents of the `div` table to the `dat1` table by matching column values: the `Depth` column from the `dat1` table will be matched to the `DeptProg` column from the `div` table.
+
+```{r}
+dat1 <- dat %>% 
+  select(Course, Days, Times, Reg) %>% 
+  filter(Days == "M" | Days == "MW",
+         Reg > 16) %>% 
+  mutate(Dept = str_sub(Course, start = 1, end = 2),
+         Number = str_sub(Course, start = 3, end = 5),
+         Number = as.integer(Number)) %>% 
+  left_join(div, by = c("Dept" = "DeptProg"))
+
+```
+
+Let's check the first few lines of `dat1`.
+
+```{r}
+head(dat1)
+```
+
+## Saving a data table to file
+
+To write a data table to a CSV file, type:
+
+```{r}
+write.csv(dat1, file = "spring_subset.csv")
+```
+
+To write the data table to an Excel file, type:
+
+```{r}
+library(writexl)
+write_xlsx(dat1, path = "spring_subset.xlsx")
+```
 
 ## Visualizing data
 
+A popular and very versatile plotting environment is the `ggplot2` package. We'll therefore load this package into our R session.
+
+```{r}
+library(ggplot2)
+```
+
 ### Bar plot
 
-### Line plot
+Before we generate a bar plot of course counts by division (from the data subset `dat1`), we'll summaries the data by `Division`.
 
-# Additional in-house resources
+```{r}
+dat2 <- dat1 %>% 
+  group_by(Division) %>% 
+  count()
+```
+
+Next, we'll piece together the `ggplot2` functions to generate the bar plot.
+
+```{r fig.height=3, fig.width=4}
+ggplot(dat2, aes(x = Division, y = n)) + geom_bar(stat = "identity")
+```
+
+The first function, `ggplot()`, specifies the data table and the variables that will be mapped to the plot window. The `aes()` function instructs R to map the `Division` column to the x-axis and the `n` column to the y-axis. The next function, `geom_bar()`, specifies the geometry to be used to visualize the data. Its argument, `stat = "identity"` simply indicates that the values already represent counts.
+
+We can flip the axes by adding `coord_flip()` to the code chunk.
+
+```{r fig.height=3, fig.width=4}
+ggplot(dat2, aes(x = Division, y = n)) + geom_bar(stat = "identity") +
+  coord_flip()
+```
+
+We may also opt to reorder the divisions by count values. This requires wrapping the `Division` variable with the `reorder()` function which takes, as a second argument, the numeric variable `n` to be used to reorder the divisions.
+
+```{r fig.height=3, fig.width=4}
+ggplot(dat2, aes(x = reorder(Division, n), y = n)) + 
+  geom_bar(stat = "identity") + coord_flip() + 
+  xlab("Division") + ylab("Count")
+```
+
+### Histogram
+
+In this example, we'll generate a histogram of registration values from the original courses data file, `dat`.
+
+```{r fig.height=3, fig.width=4}
+ggplot(dat, aes(x = Reg)) + geom_histogram()
+```
+
+### Scatter plot
+
+In this next example, we'll work off of `dat1` and two of its variables (`Number` and `Reg`) to generate a scatter plot.
+
+```{r fig.height=3, fig.width=4}
+ggplot(dat1, aes(x = Number, y = Reg)) + geom_point() 
+```
+
+
+# Additional resources
+
+ * For a thorough coverage of data table manipulation operations see https://mgimond.github.io/ES218/Week03a.html
+ * For additional examples on grouping and summarizing, see https://mgimond.github.io/ES218/Week03ab_groupby.html
+ * A large selection of `ggplot2` examples can be found here: https://mgimond.github.io/ES218/Week04c.html
+ * If you want to post questions to the global R user community, https://community.rstudio.com/ offers a very welcoming environment.
 
 
 

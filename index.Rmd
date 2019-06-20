@@ -40,7 +40,7 @@ On the second day of the R workshop, you will be introduced to the following top
  * Extending R's functionality with packages
  * Reading Excel files into an R session
  * Manipulating data tables
- * visualizing data
+ * Visualizing data
  
 
 

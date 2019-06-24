@@ -18,7 +18,7 @@ options(width = 80)
 
 <hr>
 
-> Before working through this exercise, download the [SP1819.xlsx](SP1819.xlsx) and [Divisions](Divisions.csv) files into your project folder. 
+> Before working through this exercise, download the [SP1819.xlsx](SP1819.xlsx) and [Divisions.csv](Divisions.csv) files into your project folder. 
 
 ## Extending R's functionality with packages
  
@@ -28,6 +28,8 @@ Packages are installed in your local user profile. You can install packages by c
 ```{r eval=FALSE}
 install.packages(c("readxl", "dplyr", "stringr", "writexl", "ggplot2" ))
 ```
+
+Downloading packages from CRAN is a one time operation. Once installed on your computer, you do not need to re-install them.
 
 ## Reading Excel files
 
@@ -39,7 +41,7 @@ In this next exercise, we will load the `readxl` package into our current R sess
 library(readxl)
 ```
 
-The `readxl` packages contains functions that will allow us to load an Excel file. In this next code chunk, we'll read the same spring course list loaded yesterday but this time we'll load it as an excel file.
+The `readxl` packages contain a function, `read_excel`, that will allow us to load an Excel file. In this next code chunk, we'll read the same spring course list loaded yesterday but this time we'll load it as an excel file.
 
 ```{r}
 dat <- read_excel("SP1819.xlsx", sheet = "sheet1")
@@ -102,6 +104,8 @@ dat1 <- dat %>%
          Reg > 16)
 ```
 
+It's good practice to split the different conditions across multiple lines to facilitate readability.
+
 ### Subsetting data table by column
 
 Using the same piping operation framework, we can subset our table by column names. For example, to limit the table to the columns `Course`, `Days`, `Times` and `Reg`, type:
@@ -150,7 +154,7 @@ dat %>%
   count()
 ```
 
-We can also summarize columns using descriptive statistics such as the mean, minimum and maximum. Here, we'll make use of the `summarise()` function. For example:
+We can also summarize columns using descriptive statistics such as the mean, minimum and maximum. Next, we'll make use of the `summarise()` function. For example:
 
 ```{r}
 dat %>% 
@@ -309,6 +313,16 @@ In this next example, we'll work off of `dat1` and two of its variables (`Number
 ggplot(dat1, aes(x = Number, y = Reg)) + geom_point() 
 ```
 
+
+### Faceting plots
+
+You can also break the plots down into sub-plots based on a categorical variable. For example, to generate a histogram of class sizes by division, type:
+
+```{r fig.height=3, fig.width=4}
+ggplot(dat1, aes(x = Reg)) + geom_histogram() + facet_wrap(~ Division)
+```
+
+The `facet_wrap()` function instructs `ggplot` to break the histogram plots into separate plots based on the unique `Division` values (there are four in our example) associated with each record in `dat1`.
 
 # Additional resources
 

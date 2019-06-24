@@ -1,7 +1,7 @@
 ---
 title: "Introduction to R"
 author: "Manny Gimond"
-date: "Summer 2019"
+date: "Colby College -- Summer 2019"
 output: 
   html_document:
     toc: false
@@ -26,8 +26,8 @@ Before attending the workshop, make sure to install both R and RStudio per instr
 On the first day of the R workshop, you will be introduced to the following topics:
 
  * Variables (aka objects)
- * R core data types: these will include **integers**, **double**, **character** and **logical**
- * R data structures: these will be limited to **vectors** and **data frames**
+ * R core data types: these will include **integer**, **double**, **character** and **logical**
+ * R data structures: these will be limited to **vectors** and **dataframes**
  * Good R coding practices
  * Reading a CSV file into R
 

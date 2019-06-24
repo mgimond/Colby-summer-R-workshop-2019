@@ -14,6 +14,9 @@ Humanities,SP
 Humanities,TD
 Humanities,JA
 Humanities,GK
+Humanities,LT
+Humanities,CN
+Humanities,WP
 Social Divisions,AY
 Social Divisions,EC
 Social Divisions,GO
@@ -21,10 +24,12 @@ Social Divisions,HI
 Social Divisions,PS
 Social Divisions,SO
 Natural Sciences,BI
+Natural Sciences,BC
 Natural Sciences,CH
 Natural Sciences,CS
 Natural Sciences,GE
 Natural Sciences,MA
+Natural Sciences,SC
 Natural Sciences,PH
 Natural Sciences,AS
 Interdisciplinary Studies,AA

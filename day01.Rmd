@@ -1,7 +1,7 @@
 ---
 title: "Introduction to R - Day 1"
 author: "Manny Gimond"
-date: "Summer 2019"
+date: "Colby College -- Summer 2019"
 output: 
   html_document:
     toc: true
@@ -18,7 +18,7 @@ options(width = 80)
 
 <hr>
 
-## Object and variables
+## Objects and variables
 
 Data are either explicitly typed in an R command, or they are referenced using variable names (aka objects). For example, the following command performs a simple addition.
 
@@ -36,7 +36,7 @@ b <- 3
 a + b
 ```
 
-The objects `a` and `b` are each assigned the values `2` and `3` respectively. The combined characters `<` and `-` mimic a *left arrow* indicating that the value to the right is being assigned to the variable to the left The combined characters ,`<-`, is referred to as the **assignment** operator. 
+The objects `a` and `b` are each assigned the values `2` and `3` respectively. The combined characters `<` and `-` mimic a *left arrow* indicating that the value to the right is being assigned to the variable to the left. The combined characters ,`<-`, is referred to as the **assignment** operator. 
 
 Alternatively, you can use the `=` in lieu of `<-` however, this is not common practice in the R user community. Furthermore, the *left arrow* reinforces the idea that the value to the right is being assigned to the variable to the left.
 
@@ -48,17 +48,30 @@ b <- c(1, 2, 3, 4)
 a + b
 ```
 
-Here, we are assigning more than a single value to variables `a` and `b` using the *concatenate* function `c()`. Most functions start with the function name followed by parentheses that encompass parameters passed to the function. We'll be making use of many more functions later in this course.
+Here, we are assigning more than a single value to variables `a` and `b` using the *concatenate* function `c()`. Most functions start with the function name followed by parentheses that encompass parameters that are passed to the function. We'll be making use of many more functions later in this course.
 
 The variables `a` and `b` are called **vectors** in R lingo. Both `a` and `b` are said to be *four element* vectors since they each store 4 values. In the earlier example, `a` and `b` were assigned a single value making them *one element* vectors.
 
-### What name can I assign to a variable
+### What name can I assign to a variable?
 
 You are free to assign most any letter or name to a variable as long as it follows these rules:
 
- * does not contain a spaces,
+ * does not contain spaces,
  * starts with a letter (and not a number),
- * contains only alphanumeric characters, underscores `_`, and dots `.`
+ * contains only alphanumeric characters, underscores `_`, and dots `.`,
+ * is not a reserved word.
+ 
+You can see a list of reserved words by typing the following at the command line:
+ 
+```{r eval=FALSE}
+?reserved
+```
+
+```
+if, else, repeat, while, function, for, in, next, break,
+TRUE, FALSE, NULL, Inf, NaN, NA, NA_integer_, NA_real_, NA_complex, NA_character_
+```
+
  
 The following are examples of valid variable names:
 
@@ -100,14 +113,14 @@ x <- c(1.0, -3.4, 2, 140.1)
 typeof(x)
 ```
 
-Note that removing the fraction part of a number when creating a numeric object does not necessarily create an integer. For example, creating what seems to be an integer object returns double when queried by `typeof()`:
+Note that removing the fractional part of a number when creating a numeric object does not necessarily create an integer. For example, creating what seems to be an integer object returns double when queried by `typeof()`:
 
 ```{r}
 x <- 4
 typeof(x)
 ```
 
-To force R to recognize a value as an integer add an upper case L to the number.
+To force R to recognize a value as an integer, add an upper case `L` to the number.
 
 ```{r}
 x <- 4L
@@ -125,7 +138,7 @@ typeof(x)
 
 ### Characters
 
-The character data type consists of letters or words such as "a", "f", "project", "house value".
+The character data type consists of letters or words such as `"a"`, `"f"`, `"project"` and  `"house value"`.
 
 ```{r}
 x <- "a"
@@ -204,7 +217,7 @@ Function  |  Purpose
 
 So far, we've run R commands from within an *R console* or an *RStudio* command line environment. If you intend on typing more than a few lines of code in a command prompt environment, or if you wish to save a series of commands as part of a project’s analysis, it is probably best that you write and store the commands in an R script file. Such a file is usually saved with a `.R` extension.
 
-In RStudio, you can create a new script by clicking on the upper left icon then selecting **R script**.
+In RStudio, you can create a new script by clicking on the upper left icon, then selecting **R script**.
 
 ```{r, echo=FALSE}
 knitr::include_graphics("new_R_Script.PNG",  dpi = NULL)
@@ -259,13 +272,13 @@ You can also select a subset of elements by index values using the combine funct
 x[c(1,2,4)]
 ```
 
-Or, if you are interested in a range of indexed values such as index 2 through 4, use the : operator.
+Or, if you are interested in a range of indexed values such as index 2 through 4, use the sequence, `:`, operator.
 
 ```{r}
 x[2:4]
 ```
 
-### Data frame
+### Dataframe
 
 A **dataframe** is what comes closest to our perception of a data table. You can think of a dataframe as a collection of vector elements where each vector represents a column. As such, it's important that the vectors have the same number of elements.
 
@@ -283,7 +296,7 @@ To view each column’s data type we'll make use of a new function: the structur
 str(dat)
 ```
 
-You’ll notice that the `col` and `col2` columns are stored as numeric (i.e. as doubles) and not as integer. There is some inconsistency in R’s characterization of data type. Here, numeric represents double whereas an integer datatype would display integer. For example:
+You’ll notice that the `col1` and `col2` columns are stored as numeric (i.e. as doubles) and not as integer. There is some inconsistency in R’s characterization of data type. Here, numeric represents double whereas an integer datatype would display integer. For example:
 
 ```{r}
 col2 <- c(1L, 45L, 5L)
@@ -310,7 +323,7 @@ dat[2, 3]
 If you wish to list *all* rows for columns one through two, leave the first index blank:
 
 ```{r}
-dat[ ,1:2]
+dat[ , 1:2]
 ```
 
 Or, if you wish to list the third row for all columns, leave the second index blank:
@@ -319,7 +332,7 @@ Or, if you wish to list the third row for all columns, leave the second index bl
 dat[ 3 , ]
 ```
 
-You can also reference columns by their names if you append the $ character to the dataframe object name. For example, to list the values in the column named `col2`, type:
+You can also reference columns by their names if you append the `$` character to the dataframe object name. For example, to list the values in the column named `col2`, type:
 
 ```{r}
 dat$col2
@@ -421,7 +434,7 @@ dat1 <- dat[ , -c(2,3)]
 
 ### Line length
 
-Try to limit the line length to 80 characters. You can add an 80 character vertical line to you code editor via **Tools >> Global Options >> Code** and the Display tab.
+Try to limit the line length to 80 characters. You can add an 80 character vertical line to your code editor via **Tools >> Global Options >> Code** and the Display tab.
 
 ```{r, echo=FALSE}
 knitr::include_graphics("line_length.png",  dpi = NULL)
@@ -431,10 +444,14 @@ knitr::include_graphics("line_length.png",  dpi = NULL)
 
 > Before working through this exercise, download the [SP1819.csv](SP1819.csv) file into your project folder.
 
-A popular (and universal) data file format is the comma separated file format known as a CSV file. To open a csv data table in R, use the `read.csv()` function. In the next example, we will load Registrar's course schedule for the Spring of 2019. But first, we will need to let our R session know where to find the data file. We'll make use of RStudio's interface to specify our working directory. In the menu bar, navigate to **Session >> Set Working Directory >> Choose Directory** and select the folder where you have the `SP1818.csv` file saved. Or, if you are familiar with directory structures, you can type the full path in R using the `setwd()` function as in:
+A popular (and universal) data file format is the comma separated file format known as a CSV file. To open a csv data table in R, use the `read.csv()` function. In the next example, we will load registrar's course schedule for the Spring of 2019. But first, we will need to let our R session know where to find the data file. We'll make use of RStudio's interface to specify our working directory. In the menu bar, navigate to **Session >> Set Working Directory >> Choose Directory** and select the folder where you have the `SP1818.csv` file saved. Or, if you are familiar with directory structures, you can type the full path in R using the `setwd()` function as in:
 
 ```{r eval = FALSE}
+# On Windows ...
 setwd("C:/Users/Jdoe/Workshop/Data")
+
+# On Macs ...
+setwd("/Users/Jdoe/Workshop/Data")
 ```
 
 Next, we'll open the data file and store its contents in an object we'll name `dat`.

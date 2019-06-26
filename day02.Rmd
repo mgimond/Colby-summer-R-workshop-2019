@@ -22,7 +22,7 @@ options(width = 80)
 
 ## Extending R's functionality with packages
  
-While R has a rich suite of functions to work off of, the R community extends on R’s built-in functions by offering customized functions via packages. There are more than 10,000 packages with additional packages being added weekly or daily. Most packages can be downloaded via CRAN (the Comprehensive R Archive Network).
+While R has a rich suite of functions to work off of, the R community extends on R’s built-in functions by offering customized functions via packages. There are more than 14,000 packages with additional packages being added weekly or daily. Most packages can be downloaded via CRAN (the Comprehensive R Archive Network).
 Packages are installed in your local user profile. You can install packages by command line via `install.packages`. In today's workshop, we'll make use of five packages: `readxl`, `dplyr`, `stringr`, `writexl` and `ggplot2`.
 
 ```{r eval=FALSE}

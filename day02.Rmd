@@ -330,6 +330,7 @@ The `facet_wrap()` function instructs `ggplot` to break the histogram plots into
  * For additional examples on grouping and summarizing, see https://mgimond.github.io/ES218/Week03ab_groupby.html
  * A large selection of `ggplot2` examples can be found here: https://mgimond.github.io/ES218/Week04c.html
  * If you want to post questions to the global R user community, https://community.rstudio.com/ offers a very welcoming environment.
+ * To stay abreast of the latest R packages or online resources, visit https://rweekly.org/
 
 
 
